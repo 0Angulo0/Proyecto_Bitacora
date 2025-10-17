@@ -17,14 +17,8 @@ class info{
             this-> ip = ip;
             this-> falla = falla;
         }
-        string getmes() { return mes; };
-        int getdia() { return dia; };
-        string gethora() { return hora; };
-        string getip() { return ip; };
-        string getfalla() { return falla; };
-        void design(){  //& titulo de la tabla
-            cout << "MES | DÍA | HORA | DIRECCIÓN IP | FALLA |" << endl;
-            cout << "--------------------------------------" << endl;
+        string design(){  //& titulo de la tabla
+            return "FECHA |  HORA  |   DIRECCIÓN IP   | FALLA | \n-----------------------------------------";
         };
         void display(){  //& formato del texto
             cout << setw(3) << left << mes << " | " << setw(2) << left << dia << " | " << setw(8) << left << hora << " | " << setw(16) << left << ip << " |" << setw(40) << left << falla << endl;
@@ -42,25 +36,15 @@ class info{
             return mesIzq < mesDer;
             return this->dia < in.dia;
         }
-        /*int partition(vector <info> &b1, int low, int high){
-            info pivot = b1[high];  //se establece el pivote central
-            int i = low-1;
-            for (int j = low; j < high; j++){  //para que se detenga antes de que llegue al valor del pivote
-                if (b1[j] < pivot){ //uso de sobrecarga del operados <
-                    i++;
-                    swap(b1[i], b1[j]);  //cambio de lugar entre i y j
-                }
-            }
-            swap(b1[i + 1], b1[high]);  //se acomoda el pivote en su lugar
-            return i + 1;
-        }
-        void quick_sort(vector <info> &b1, int low, int high){
-            if (low >= high)  //condición que detiene la recursion
-            return;
-            int pi = partition(b1, low, high);
-            quick_sort(b1, low, pi-1);
-            quick_sort(b1, pi +1, high);
-        }*/
+        void save(vector <info> &b1){  //& creacion de un nuevo txt con el vector acomodado
+            ofstream file("bitacoraAcomodada.txt"); //esccribe los datos al archivo
+            file << b1[0].design() << endl;
+            for(int i = 1; i < b1.size() +1; i++){  //guarda cada objeto
+                file << b1[i].mes << " " << b1[i].dia << " " << b1[i].hora << " " << b1[i].ip << " " << b1[i].falla << "\n";
+            };
+            file.close();  //cierra el archivo ya guardado
+            cout << "Cambios guardados con exíto :)" << endl;
+        };
 };
 int partition(vector <info> &b1, int low, int high){
     info pivot = b1[high];  //se establece el pivote central
@@ -103,25 +87,20 @@ int main(){
         values[2] = hora;              
         values[3] = ip;                
         values[4] = falla;    
-        b1.push_back(info(values[0], stoi(values[1]), values[2], values[3], values[4])); //agregamos el objeto al vector         
+        b1.push_back(info(values[0], stoi(values[1]), values[2], values[3], values[4])); //agregamos el objeto al vector      
     }    
-    int index = b1.size()-1;
-    cout << index << endl;
-    quick_sort(b1, 0, index);
+    cout << "Datos agregados al vector :)" << endl;   
+
+    quick_sort(b1, 0, b1.size()-1); //acomoda los datos ingresados por fecha
+    cout << "Datos acomodados con exito :)" << endl;
     
-    b1[0].design();
+
     b1[1].display();
     b1[2].display();
     file.close();
 
-    ofstream doc("bitacoraAcomodada.txt");  //creamos y abrimos un nuevo txt
-    doc << b1[0].design() << endl;
-    for (int i = 0; i < index+1; i++){  //agregamos cada elemento del vector ya ordenado
-        //doc << b1[i].getmes()  << " " << b1[i].getdia()  << " " << b1[i].gethora() << " " << b1[i].getip() << " " << b1[i].getfalla() << endl;
-        doc << b1[i].display() << endl;
-    }
-    
-    doc.close();
+    b1[0].save(b1);  //guarda el vector acomodado en un nuevo archivo
+
 
     return 0;
 }
