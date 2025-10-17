@@ -34,53 +34,64 @@ class info{
             file.close();  //cierra el archivo ya guardado
             cout << "Cambios guardados con exíto :)" << endl; 
         }
-        int binarySearch_inicio(vector<info> &b1, string mesElegido, int diaElegido, int low, int high) {  //&busqueda binaria para la fecha de inicio
-            //Complejidad: O(logn)
-            if (low > high) {  //caso donde termina la recursion
-                return low;
+        int binarySearch_inicio(vector<info> &b1, string mesElegido, int diaElegido, string horaElegida, int low, int high) {
+            if (low > high) return low;
+            
+            int mid = low + (high - low) / 2;
+            string meses[12] = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+            int mesMid = 0, mesBuscar = 0;
+            
+            for (int i = 0; i < 12; i++) {
+                if (b1[mid].mes == meses[i]) mesMid = i;
+                if (mesElegido == meses[i]) mesBuscar = i;
             }
-            int mid = low + (high - low) / 2; // calcula el punto medio
-            string meses[12] = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};  //array con los meses
-            int mesMid = 0, mesBuscar = 0; 
-            for (int i = 0; i < 12; i++) {  //mes a numero (con el index)
-                if (b1[mid].mes== meses[i]) { 
-                    mesMid = i; }
-                if (mesElegido == meses[i]) { 
-                    mesBuscar = i; }
-            }
-            //comparacion de meses y dias
-            if (mesMid > mesBuscar) {  //mes actual > al mes objetivo
-                return binarySearch_inicio(b1, mesElegido, diaElegido, low, mid - 1);  //busca a la izquierda
-            } else if (mesMid < mesBuscar) {  //mes actual < mes objetivo
-                return binarySearch_inicio(b1, mesElegido, diaElegido, mid + 1, high);  //busca a la derecha
-            } else {   //meses iguales, seguimos a comparar dias
-                if (b1[mid].dia >= diaElegido)   //dia es igual al del usuario o está en el lado izquierdo
-                return binarySearch_inicio(b1, mesElegido, diaElegido, low, mid - 1);
-                return binarySearch_inicio(b1, mesElegido, diaElegido, mid + 1, high);  //el dia esta en el lado derecho
+            
+            if (mesMid > mesBuscar) {
+                return binarySearch_inicio(b1, mesElegido, diaElegido, horaElegida, low, mid - 1);
+            } else if (mesMid < mesBuscar) {
+                return binarySearch_inicio(b1, mesElegido, diaElegido, horaElegida, mid + 1, high);
+            } else {
+                if (b1[mid].dia > diaElegido) {
+                    return binarySearch_inicio(b1, mesElegido, diaElegido, horaElegida, low, mid - 1);
+                } else if (b1[mid].dia < diaElegido) {
+                    return binarySearch_inicio(b1, mesElegido, diaElegido, horaElegida, mid + 1, high);
+                } else {
+                    if (b1[mid].hora >= horaElegida) {
+                        return binarySearch_inicio(b1, mesElegido, diaElegido, horaElegida, low, mid - 1);
+                    } else {
+                        return binarySearch_inicio(b1, mesElegido, diaElegido, horaElegida, mid + 1, high);
+                    }
+                }
             }
         }
-        int binarySearch_final(vector<info> &b1, string mesElegido, int diaElegido, int low, int high) { //&busqueda binaria para la fecha del final
-            if (low > high) {  //caso donde termina la recursion
-                return high;
+        int binarySearch_final(vector<info> &b1, string mesElegido, int diaElegido, string horaElegida, int low, int high) {
+            if (low > high) return high;
+            
+            int mid = low + (high - low) / 2;
+            string meses[12] = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+            int mesMid = 0, mesBuscar = 0;
+            
+            for (int i = 0; i < 12; i++) {
+                if (b1[mid].mes == meses[i]) mesMid = i;
+                if (mesElegido == meses[i]) mesBuscar = i;
             }
-            int mid = low + (high - low) / 2; // calcula el punto medio
-            string meses[12] = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};  //array con los meses
-            int mesMid = 0, mesBuscar = 0; 
-            for (int i = 0; i < 12; i++) {  //mes a numero (con el index)
-                if (b1[mid].mes == meses[i]) { 
-                    mesMid = i; }
-                if (mesElegido == meses[i]) { 
-                    mesBuscar = i; }
-            }
-            //comparacion de meses y dias
-            if (mesMid > mesBuscar) {  //mes actual>al mes objetivo
-                return binarySearch_final(b1, mesElegido, diaElegido, low, mid - 1);  //busca a la izquierda
-            } else if (mesMid < mesBuscar) {  //mes actual < mes objetivo
-                return binarySearch_final(b1, mesElegido, diaElegido, mid + 1, high);  //busca a la derecha
-            } else {   //meses iguales, seguimos a comparar dias
-                if (b1[mid].dia <= diaElegido)   //dia es igual al del usuario o está en el lado izquierdo
-                return binarySearch_final(b1, mesElegido, diaElegido, mid + 1, high);
-                return binarySearch_final(b1, mesElegido, diaElegido, low, mid - 1);  //el dia esta en el lado derecho
+            
+            if (mesMid > mesBuscar) {
+                return binarySearch_final(b1, mesElegido, diaElegido, horaElegida, low, mid - 1);
+            } else if (mesMid < mesBuscar) {
+                return binarySearch_final(b1, mesElegido, diaElegido, horaElegida, mid + 1, high);
+            } else {
+                if (b1[mid].dia > diaElegido) {
+                    return binarySearch_final(b1, mesElegido, diaElegido, horaElegida, low, mid - 1);
+                } else if (b1[mid].dia < diaElegido) {
+                    return binarySearch_final(b1, mesElegido, diaElegido, horaElegida, mid + 1, high);
+                } else {
+                    if (b1[mid].hora <= horaElegida) {
+                        return binarySearch_final(b1, mesElegido, diaElegido, horaElegida, mid + 1, high);
+                    } else {
+                        return binarySearch_final(b1, mesElegido, diaElegido, horaElegida, low, mid - 1);
+                    }
+                }
             }
         }
         void print(vector <info> &b1, int inicio, int final){  //& imprime los valores en el rango encontrado
@@ -100,9 +111,12 @@ class info{
                 mesDer = i;
             }
             if (mesIzq != mesDer)
-            return mesIzq < mesDer;
-            return this->dia < in.dia;
-        }        
+                return mesIzq < mesDer;  //comparacion de mes
+            else if (this->dia != in.dia)
+                return this->dia < in.dia;  //comparacion de dia
+            else 
+                return this->hora < in.hora;  //comparacion de hora
+        }
 };
 int partition(vector <info> &b1, int low, int high){   //& pivote
     //Complejidad: O(n)
@@ -158,21 +172,26 @@ int main(){
     b1[0].save(b1);  //guarda el vector acomodado en un nuevo archivo
     
     int diaInicial, diaFinal;  //variables usadas para respuestas del usuario
-    string mesInicial, mesFinal;
+    string mesInicial, mesFinal, horaInicial, horaFinal;
     cout << "\n Busqueda en la bítacora de errores" << endl;  //busqueda por rango
     cout << "¿Cuál es el mes en el que quiere empezar la busqueda? Escriba las primeras 3 letras del mes en ingles: Jan, Feb, etc." << endl;
     cin >> mesInicial;
     cout << "¿Cuál es el día en el que quiere empezar la busqueda?" << endl;
     cin >> diaInicial;
+    cout << "¿Cuál es la hora inicial? (formato HH:MM:SS): ";
+    cin >> horaInicial;
     cout << "¿Cuál es el mes en el que quiere terminar la busqueda? Escriba las primeras 3 letras del mes en ingles: Jan, Feb, etc." << endl;
     cin >> mesFinal;
     cout << "¿Cuál es el día en el que quiere terminar la busqueda?" << endl;
     cin >> diaFinal;
-    int inicio = b1[0].binarySearch_inicio(b1, mesInicial, diaInicial, 0, b1.size()-1);  //llama a la busqueda para la primera decha
-    int Final = b1[0].binarySearch_final(b1, mesFinal, diaFinal, 0, b1.size()-1);  //llama a la busqueda para la fecha final
+    cout << "¿Cuál es la hora final? (formato HH:MM:SS): ";
+    cin >> horaFinal;
+    
+    int inicio = b1[0].binarySearch_inicio(b1, mesInicial, diaInicial, horaInicial, 0, b1.size()-1);
+    int Final = b1[0].binarySearch_final(b1, mesFinal, diaFinal, horaFinal, 0, b1.size()-1);
     
     if (inicio > Final || inicio >= b1.size() || Final < 0) {
-    cout << "No se encontraron registros entre " << mesInicial << " " << diaInicial << " y " << mesFinal << " " << diaFinal << endl;
+    cout << "No se encontraron registros entre " << horaInicial << " " << horaFinal << " " << mesInicial << " " << diaInicial << " y " << mesFinal << " " << diaFinal << endl;
     cout << "Por favor, revise que los datos ingresados fueron escritos de forma correcta." << endl;
     } else {
         cout << "\n Resultados de la búsqueda: " << endl;
